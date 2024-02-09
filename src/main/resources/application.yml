@@ -1,0 +1,12 @@
+micronaut:
+  application:
+    name: rinhav2
+
+jackson:
+  property-naming-strategy: SNAKE_CASE
+  serialization:
+    writeDatesAsTimestamps: false
+  serialization-inclusion: non_absent
+
+mongodb:
+  uri: 'mongodb://localhost:27017/rinhav2'
