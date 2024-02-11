@@ -2,6 +2,7 @@ package dev.rochajg.infrastructure.db.repository.transaction
 
 import com.mongodb.client.MongoClient
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Sorts
 import com.mongodb.client.result.InsertOneResult
 import dev.rochajg.infrastructure.db.DatabaseNames
 import dev.rochajg.infrastructure.db.schema.transaction.TransactionSchema
@@ -20,6 +21,8 @@ class TransactionRepository(
             .find(
                 Filters.eq("userId", userId),
             )
+            .sort(Sorts.descending("createdAt"))
+            .limit(10)
             .toList()
 
     private fun getCollection() =
