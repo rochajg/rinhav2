@@ -10,7 +10,7 @@ import jakarta.inject.Singleton
 class UserRepository(
     private val mongoClient: MongoClient,
 ) {
-    fun get(id: Int): UserSchema? =
+    fun get(id: Int?): UserSchema? =
         getCollection()
             .find(
                 Filters.eq("userId", id),
