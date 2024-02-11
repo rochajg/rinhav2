@@ -6,4 +6,6 @@ interface TransactionGateway {
     fun create(transaction: Transaction)
 
     fun getByUser(userId: Int): List<Transaction>
+
+    fun executeInTransaction(transaction: () -> Unit)
 }

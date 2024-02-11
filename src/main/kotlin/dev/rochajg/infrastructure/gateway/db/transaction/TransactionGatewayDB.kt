@@ -19,4 +19,8 @@ class TransactionGatewayDB(
     override fun getByUser(userId: Int): List<Transaction> =
         transactionRepository.getByUser(userId)
             .map(TransactionSchema::toEntity)
+
+    override fun executeInTransaction(transaction: () -> Unit) {
+        transactionRepository.executeInTransaction(transaction)
+    }
 }
