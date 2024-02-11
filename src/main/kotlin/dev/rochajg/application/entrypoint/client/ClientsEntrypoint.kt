@@ -4,10 +4,11 @@ import dev.rochajg.application.entrypoint.client.entity.CreateTransactionRequest
 import dev.rochajg.application.entrypoint.client.entity.toDomain
 import dev.rochajg.application.exception.ApiException
 import dev.rochajg.domain.entity.user.UserTransaction
+import dev.rochajg.domain.usecase.exception.UserNotFoundException
 import dev.rochajg.domain.usecase.statement.ObtainStatement
 import dev.rochajg.domain.usecase.transaction.CreateTransactionUseCase
 import dev.rochajg.domain.usecase.transaction.exception.InsufficientBalanceException
-import dev.rochajg.domain.usecase.transaction.exception.UserNotFoundException
+import dev.rochajg.domain.usecase.transaction.exception.InvalidTransactionRequestException
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -21,10 +22,17 @@ class ClientsEntrypoint(
 ) {
     @Post("/{user_id}/transacoes")
     fun createTransaction(
-        @PathVariable(name = "user_id") userId: Int,
+        @PathVariable(name = "user_id") userId: Int?,
         @Body request: CreateTransactionRequest,
     ) = try {
         createTransaction.createTransaction(userId, request.toDomain())
+    } catch (e: InvalidTransactionRequestException) {
+        throw ApiException(
+            error = "invalid_transaction_request",
+            message = e.message,
+            statusCode = 422,
+            cause = e,
+        )
     } catch (e: UserNotFoundException) {
         throw ApiException(
             error = "user_not_found",
@@ -35,7 +43,7 @@ class ClientsEntrypoint(
     } catch (e: InsufficientBalanceException) {
         throw ApiException(
             error = "insufficient_balance",
-            message = "User [${e.userId}] doesn't have enough balance for this transaction",
+            message = "User [${e.userId}] doesn't have enough balance [${e.actualBalance}] for this transaction",
             statusCode = 422,
             cause = e,
         )
@@ -44,5 +52,15 @@ class ClientsEntrypoint(
     @Get("/{user_id}/extrato")
     fun getStatement(
         @PathVariable(name = "user_id") userId: Int,
-    ): UserTransaction = obtainStatement.getStatement(userId)
+    ): UserTransaction =
+        try {
+            obtainStatement.getStatement(userId)
+        } catch (e: UserNotFoundException) {
+            throw ApiException(
+                error = "user_not_found",
+                message = "User with id [${e.userId}] not found",
+                statusCode = 404,
+                cause = e,
+            )
+        }
 }
