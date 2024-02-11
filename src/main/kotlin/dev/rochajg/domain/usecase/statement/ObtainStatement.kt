@@ -5,6 +5,7 @@ import dev.rochajg.domain.entity.user.UserTransaction
 import dev.rochajg.domain.entity.user.UserTransactions
 import dev.rochajg.domain.gateway.transaction.TransactionGateway
 import dev.rochajg.domain.gateway.user.UserGateway
+import dev.rochajg.domain.usecase.exception.UserNotFoundException
 import jakarta.inject.Singleton
 import java.util.Date
 
@@ -14,7 +15,7 @@ class ObtainStatement(
     private val userGateway: UserGateway,
 ) {
     fun getStatement(userId: Int): UserTransaction {
-        val user = userGateway.get(userId) ?: throw Exception("User not found")
+        val user = userGateway.get(userId) ?: throw UserNotFoundException(userId)
         val userTransaction = transactionGateway.getByUser(userId)
 
         return UserTransaction(
