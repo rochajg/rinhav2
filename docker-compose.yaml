@@ -1,0 +1,62 @@
+version: '3.7'
+
+services:
+  api01: &api
+    image: rochajg/rinhav2:latest
+    hostname: api01
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      MONGO_HOST: db
+      MONGO_PORT: 27017
+    depends_on:
+      - mongodb
+    deploy:
+      resources:
+        limits:
+          cpus: "0.6"
+          memory: "200MB"
+
+  api02:
+    <<: *api
+    hostname: api02
+    ports:
+      - "8082:8080"
+
+  nginx:
+    image: nginx:stable-perl
+    volumes:
+      - ./scripts/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api01
+      - api02
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.17"
+          memory: "10MB"
+
+  mongodb:
+    image: mongo:7.0.5
+    container_name: mongodb
+    hostname: db
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: rinhav2
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "0.13"
+          memory: "140MB"
+
+networks:
+  default:
+    driver: bridge
+    name: rinhav2
