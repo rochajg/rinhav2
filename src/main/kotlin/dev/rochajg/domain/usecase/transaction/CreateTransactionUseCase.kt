@@ -1,7 +1,6 @@
 package dev.rochajg.domain.usecase.transaction
 
 import dev.rochajg.domain.entity.transaction.Transaction
-import dev.rochajg.domain.gateway.transaction.TransactionGateway
 import dev.rochajg.domain.gateway.user.UserGateway
 import dev.rochajg.domain.usecase.exception.UserNotFoundException
 import dev.rochajg.domain.usecase.transaction.entity.CreatedTransaction
@@ -9,11 +8,11 @@ import dev.rochajg.domain.usecase.transaction.entity.TransactionRequest
 import dev.rochajg.domain.usecase.transaction.entity.TransactionType
 import dev.rochajg.domain.usecase.transaction.exception.InsufficientBalanceException
 import jakarta.inject.Singleton
+import java.util.Date
 
 @Singleton
 class CreateTransactionUseCase(
     private val userGateway: UserGateway,
-    private val transactionGateway: TransactionGateway,
 ) {
     fun createTransaction(
         userId: Int?,
@@ -31,17 +30,20 @@ class CreateTransactionUseCase(
             throw InsufficientBalanceException(user.id, user.balance)
         }
 
-        transactionGateway.executeInTransaction {
-            transactionGateway.create(
-                Transaction(
-                    userId = user.id,
-                    value = transactionRequest.value,
-                    operation = transactionRequest.type.value(),
-                    description = transactionRequest.description,
-                ),
-            )
-            userGateway.update(newUserBalance)
-        }
+        userGateway.update(
+            user.copy(
+                balance = newBalance,
+                transactions =
+                    listOf(
+                        Transaction(
+                            value = transactionRequest.value,
+                            operation = transactionRequest.type.value(),
+                            description = transactionRequest.description,
+                            createdAt = Date(),
+                        ),
+                    ).plus(user.transactions),
+            ),
+        )
 
         return CreatedTransaction(
             limite = newUserBalance.limit,
