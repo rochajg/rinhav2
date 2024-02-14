@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Executar o comando gradle para limpar e construir a imagem do Docker
-./gradlew clean build
+./gradlew shadowJar
 
 # Construir a imagem
 docker build -t rochajg/rinhav2:latest .
@@ -17,7 +17,7 @@ docker-compose up -d
 
 # Adiciona sleep para aguardar os contêineres iniciarem
 echo "Iniciando containers..."
-sleep 30
+sleep 10
 
 # Executar o script de teste de carga
 ./load-test/run-test.sh

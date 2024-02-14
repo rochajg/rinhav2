@@ -1,12 +1,7 @@
-FROM eclipse-temurin:17-jre-focal
+FROM amazoncorretto:17.0.10 as RUNTIME
 
-WORKDIR /home/app
-
-COPY build/docker/main/layers/libs /home/app/libs
-COPY build/docker/main/layers/classes /home/app/classes
-COPY build/docker/main/layers/resources /home/app/resources
-COPY build/docker/main/layers/application.jar /home/app/application.jar
+COPY build/libs/rinhav2-0.1-all.jar /rinha.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/home/app/application.jar"]
+ENTRYPOINT [ "java","-jar", "./rinha.jar" ]
