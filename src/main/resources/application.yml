@@ -9,4 +9,4 @@ jackson:
   serialization-inclusion: non_absent
 
 mongodb:
-  uri: 'mongodb://${MONGO_HOST}:${MONGO_PORT}/rinhav2'
+  uri: 'mongodb://${MONGO_HOST}:${MONGO_PORT}/rinhav2?socketTimeoutMS=360000&connectTimeoutMS=360000&maxPoolSize=10&minPoolSize=5'
