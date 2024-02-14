@@ -13,10 +13,10 @@ class TransactionGatewayDB(
     private val transactionRepository: TransactionRepository,
 ) : TransactionGateway {
     override fun create(transaction: Transaction) {
-        transactionRepository.create(transaction.toSchema())
+        transactionRepository.save(transaction.toSchema())
     }
 
-    override fun getByUser(userId: Int): List<Transaction> =
-        transactionRepository.getByUser(userId)
+    override fun getByUser(userId: Long): List<Transaction> =
+        transactionRepository.findTop10ByUserIdOrderByCreatedAtDesc(userId)
             .map(TransactionSchema::toEntity)
 }

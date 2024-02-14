@@ -11,7 +11,7 @@ import jakarta.inject.Singleton
 class UserGatewayDB(
     private val userRepository: UserRepository,
 ) : UserGateway {
-    override fun get(id: Int?): User? = userRepository.get(id)?.toEntity()
+    override fun get(id: Long?): User? = userRepository.find(id)?.toEntity()
 
     override fun update(user: User) {
         userRepository.update(user.toSchema())

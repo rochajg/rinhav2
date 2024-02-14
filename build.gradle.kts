@@ -26,7 +26,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     compileOnly("io.micronaut:micronaut-http-client")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.micronaut.mongodb:micronaut-mongo-sync")
+
+    ksp("io.micronaut.data:micronaut-data-processor")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    runtimeOnly("org.postgresql:postgresql")
+
     runtimeOnly("org.yaml:snakeyaml")
 
     implementation("io.github.microutils:kotlin-logging:2.0.4")
@@ -48,6 +53,12 @@ java {
 
 noArg {
     annotation("dev.rochajg.infrastructure.annotation.NoArg")
+}
+
+allOpen {
+    annotations(
+        "jakarta.persistence.Entity",
+    )
 }
 
 graalvmNative.toolchainDetection.set(false)

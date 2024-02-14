@@ -22,7 +22,7 @@ class ClientsEntrypoint(
 ) {
     @Post("/{user_id}/transacoes")
     fun createTransaction(
-        @PathVariable(name = "user_id") userId: Int?,
+        @PathVariable(name = "user_id") userId: Long?,
         @Body request: CreateTransactionRequest,
     ) = try {
         createTransaction.createTransaction(userId, request.toDomain())
@@ -51,7 +51,7 @@ class ClientsEntrypoint(
 
     @Get("/{user_id}/extrato")
     fun getStatement(
-        @PathVariable(name = "user_id") userId: Int,
+        @PathVariable(name = "user_id") userId: Long,
     ): UserTransaction =
         try {
             obtainStatement.getStatement(userId)

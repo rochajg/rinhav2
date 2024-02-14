@@ -1,32 +1,29 @@
 package dev.rochajg.infrastructure.db.schema.user
 
 import dev.rochajg.domain.entity.user.User
-import dev.rochajg.infrastructure.annotation.NoArg
-import io.micronaut.core.annotation.ReflectiveAccess
-import org.bson.types.ObjectId
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
-@NoArg
-@ReflectiveAccess
+@Entity
+@Table(name = "users")
 data class UserSchema(
-    var id: ObjectId? = ObjectId(),
-    var userId: Int,
-    var name: String,
-    var limit: Int,
-    var balance: Int,
+    @Id
+    var id: Long? = null,
+    var creditLimit: Int? = null,
+    var balance: Int? = null,
 )
 
 fun UserSchema.toEntity() =
     User(
-        id = userId,
-        name = name,
-        limit = limit,
-        balance = balance,
+        id = id!!,
+        limit = creditLimit!!,
+        balance = balance!!,
     )
 
 fun User.toSchema() =
     UserSchema(
-        userId = id,
-        name = name,
-        limit = limit,
+        id = id,
+        creditLimit = limit,
         balance = balance,
     )

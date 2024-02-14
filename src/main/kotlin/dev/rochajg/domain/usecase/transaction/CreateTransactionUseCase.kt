@@ -16,7 +16,7 @@ class CreateTransactionUseCase(
     private val transactionGateway: TransactionGateway,
 ) {
     fun createTransaction(
-        userId: Int?,
+        userId: Long?,
         transactionRequest: TransactionRequest,
     ): CreatedTransaction {
         val user = userGateway.get(userId) ?: throw UserNotFoundException(userId)

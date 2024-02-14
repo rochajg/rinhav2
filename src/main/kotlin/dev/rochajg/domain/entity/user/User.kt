@@ -1,8 +1,7 @@
 package dev.rochajg.domain.entity.user
 
 data class User(
-    val id: Int,
-    val name: String,
+    val id: Long,
     val limit: Int,
     val balance: Int,
 )

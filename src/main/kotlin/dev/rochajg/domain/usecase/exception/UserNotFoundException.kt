@@ -1,5 +1,5 @@
 package dev.rochajg.domain.usecase.exception
 
 class UserNotFoundException(
-    val userId: Int?,
+    val userId: Long?,
 ) : Exception()

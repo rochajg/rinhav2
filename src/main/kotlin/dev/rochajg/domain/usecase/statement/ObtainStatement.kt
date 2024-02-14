@@ -14,7 +14,7 @@ class ObtainStatement(
     private val transactionGateway: TransactionGateway,
     private val userGateway: UserGateway,
 ) {
-    fun getStatement(userId: Int): UserTransaction {
+    fun getStatement(userId: Long): UserTransaction {
         val user = userGateway.get(userId) ?: throw UserNotFoundException(userId)
         val userTransaction = transactionGateway.getByUser(userId)
 

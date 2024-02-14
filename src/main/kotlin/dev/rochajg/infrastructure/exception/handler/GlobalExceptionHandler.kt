@@ -7,8 +7,6 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Error
-import io.micronaut.web.router.exceptions.UnsatisfiedRouteException
-import jakarta.validation.ValidationException
 import mu.KotlinLogging
 import org.slf4j.Logger
 
@@ -29,30 +27,6 @@ class GlobalExceptionHandler(
                 message = "Internal Server Error",
             ),
         ).also { logError(request, it, exception) }
-
-    @Error(global = true, exception = ValidationException::class)
-    fun validationErrorHandler(
-        request: HttpRequest<*>,
-        validationException: ValidationException,
-    ): HttpResponse<ApiError> =
-        HttpResponse.badRequest(
-            ApiError(
-                error = "validation_error",
-                message = validationException.message,
-            ),
-        ).also { logError(request, it, validationException) }
-
-    @Error(global = true, exception = UnsatisfiedRouteException::class)
-    fun unsatisfiedRouteErrorHandler(
-        request: HttpRequest<*>,
-        unsatisfiedHeaderException: UnsatisfiedRouteException,
-    ): HttpResponse<ApiError> =
-        HttpResponse.badRequest(
-            ApiError(
-                error = "validation_error",
-                message = unsatisfiedHeaderException.message,
-            ),
-        ).also { logError(request, it, unsatisfiedHeaderException) }
 
     @Error(global = true, exception = ApiException::class)
     fun apiExceptionHandler(
