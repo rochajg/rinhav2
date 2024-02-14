@@ -31,17 +31,15 @@ class CreateTransactionUseCase(
             throw InsufficientBalanceException(user.id, user.balance)
         }
 
-        transactionGateway.executeInTransaction {
-            transactionGateway.create(
-                Transaction(
-                    userId = user.id,
-                    value = transactionRequest.value,
-                    operation = transactionRequest.type.value(),
-                    description = transactionRequest.description,
-                ),
-            )
-            userGateway.update(newUserBalance)
-        }
+        userGateway.update(newUserBalance)
+        transactionGateway.create(
+            Transaction(
+                userId = user.id,
+                value = transactionRequest.value,
+                operation = transactionRequest.type.value(),
+                description = transactionRequest.description,
+            ),
+        )
 
         return CreatedTransaction(
             limite = newUserBalance.limit,

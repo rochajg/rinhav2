@@ -25,19 +25,6 @@ class TransactionRepository(
             .limit(10)
             .toList()
 
-    fun executeInTransaction(transaction: () -> Unit) {
-        mongoClient.startSession().use { session ->
-            session.startTransaction()
-            try {
-                transaction()
-                session.commitTransaction()
-            } catch (e: Exception) {
-                session.abortTransaction()
-                throw e
-            }
-        }
-    }
-
     private fun getCollection() =
         mongoClient
             .getDatabase(DatabaseNames.getDatabaseName())
