@@ -10,14 +10,10 @@ docker build -t rochajg/rinhav2:latest .
 docker image list rochajg/rinhav2:latest
 
 # Remover os containers existentes e limpar a base de dados do MongoDB
-docker-compose down -v
+docker compose down -v
 
 # Iniciar os contêineres utilizando o docker-compose
-docker-compose up -d
-
-# Adiciona sleep para aguardar os contêineres iniciarem
-echo "Iniciando containers..."
-sleep 10
+docker compose up -d
 
 # Executar o script de teste de carga
 ./load-test/run-test.sh
